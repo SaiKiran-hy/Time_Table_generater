@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Timetable Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        /* Basic styling for voice buttons */
+        .voice-controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .voice-controls button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Timetable Generator</h1>
+            <p>Generate optimized timetables for multiple classes and teachers</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showPanel('subjects')">Subjects</button>
+            <button class="tab" onclick="showPanel('teachers')">Teachers</button>
+            <button class="tab" onclick="showPanel('classes')">Classes</button>
+            <button class="tab" onclick="showPanel('generate')">Generate</button>
+            <button class="tab" onclick="clearAllData()">Clear All Data</button>
+        </div>
+
+        <div id="subjects" class="panel active">
+            <h2>Add Subjects</h2>
+            <div class="voice-controls">
+                <button onclick="startListening('subjectForm')">Listen to Add Subject</button>
+                <button onclick="speak('Ready to add a subject. Please say the subject name, hours per week, and if it requires a lab.')">Speak Subject Form Instructions</button>
+            </div>
+            <form id="subjectForm">
+                <div class="form-group">
+                    <label for="subjectName">Subject Name</label>
+                    <input type="text" id="subjectName" required>
+                </div>
+                <div class="form-group">
+                    <label for="subjectHours">Hours per Week</label>
+                    <input type="number" id="subjectHours" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="requiresLab">
+                        Requires Lab
+                    </label>
+                </div>
+                 <div class="form-group">
+                    <label for="subjectPriority">Priority</label>
+                    <select id="subjectPriority" required>
+                        <option value="1">High</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Low</option>
+                    </select>
+                </div>
+                <button type="submit" class="add_subject">Add Subject</button>
+            </form>
+            <div id="subjectMessage" class="message"></div>
+            <ul id="subjectList" class="subject-list"></ul>
+        </div>
+
+        <div id="teachers" class="panel">
+            <h2>Add Teachers</h2>
+             <div class="voice-controls">
+                <button onclick="startListening('teacherForm')">Listen to Add Teacher</button>
+                <button onclick="speak('Ready to add a teacher. Please say the teacher name, the subjects they teach, and the years they are available for.')">Speak Teacher Form Instructions</button>
+            </div>
+            <form id="teacherForm">
+                <div class="form-group">
+                    <label for="teacherName">Teacher Name</label>
+                    <input type="text" id="teacherName" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacherSubjects">Subjects</label>
+                    <select id="teacherSubjects" multiple required></select>
+                </div>
+                <div class="form-group">
+                    <label for="teacherYears">Available Years</label>
+                    <select id="teacherYears" multiple required>
+                        <option value="1">Iˢᵗ Year</option>
+                        <option value="2">IIⁿᵈ Year</option>
+                        <option value="3">IIIʳᵈ Year</option>
+                        <option value="4">IVᵗʰ Year</option>
+                    </select>
+                </div>
+                <button type="submit" class="add_teacher">Add Teacher</button>
+            </form>
+            <div id="teacherMessage" class="message"></div>
+            <ul id="teacherList" class="teacher-list"></ul>
+        </div>
+
+        <div id="classes" class="panel">
+            <h2>Add Classes</h2>
+            <div class="voice-controls">
+                <button onclick="startListening('classForm')">Listen to Add Class</button>
+                <button onclick="speak('Ready to add a class. Please say the year, section, and student count.')">Speak Class Form Instructions</button>
+            </div>
+            <form id="classForm">
+                <div class="form-group">
+                    <label for="classYear">Year</label>
+                    <select id="classYear" required>
+                        <option value="1">Iˢᵗ Year</option>
+                        <option value="2">IIⁿᵈ Year</option>
+                        <option value="3">IIIʳᵈ Year</option>
+                        <option value="4">IVᵗʰ Year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="classSection">Section</label>
+                    <input type="text" id="classSection" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentsCount">Students Count</label>
+                    <input type="number" id="studentsCount" required>
+                </div>
+                <button type="submit" class="add_class">Add Class</button>
+            </form>
+            <div id="classMessage" class="message"></div>
+            <ul id="classList" class="class-list"></ul>
+        </div>
+
+        <div id="generate" class="panel">
+            <h2>Generate Timetable</h2>
+            <button onclick="generateTimetable()" class="add_generate">Generate</button>
+             <div class="voice-controls">
+                <button onclick="speakTimetable()">Speak Timetable</button>
+            </div>
+            <div id="timetableResult"></div>
+        </div>
+    </div>
+    <script src="/static/js/logic.js"></script>
+</body>
+
+</html>
